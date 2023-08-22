@@ -1,0 +1,40 @@
+package org.example.model;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.Set;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+public class Community {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column
+    private String name;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column
+    private String category;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "community_members",
+            joinColumns = @JoinColumn(name = "community_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> members;
+
+    @Column
+    private String imageUrl;
+}
